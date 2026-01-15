@@ -8,6 +8,8 @@ const app = new Hono<Env>()
 
 app.get('/', (c) => {
   return c.text('Hello Hono!')
+}).get('/health', (c) => {
+  return c.json({ status: 'ok' })
 }).get('/migrate', async (c) => {
   const durableObject = c.env.DO_D1_DO.idFromName('do-d1-drizzle');
   const durableObjectStub = c.env.DO_D1_DO.get(durableObject);
