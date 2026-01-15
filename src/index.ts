@@ -17,24 +17,28 @@ app.get('/', (c) => {
   return c.json({
     message: 'Migrated!',
   });
-}).get('/create', async (c) => {
+}).get('/d1/create', async (c) => {
   const db = createDB(c.env)
   const dbUser = await db.insert(userTable).values({ name: `db-user-${new Date().toISOString()}` }).returning().get()
 
+  return c.json({ dbUser })
+}).get('/do/create', async (c) => {
   const durableObject = c.env.DO_D1_DO.idFromName('do-d1-drizzle')
   const durableObjectStub = c.env.DO_D1_DO.get(durableObject)
   const doUser = await durableObjectStub.insert({ name: `do-user-${new Date().toISOString()}` })
 
-  return c.json({ dbUser, doUser })
-}).get('/users', async (c) => {
+  return c.json({ doUser })
+}).get('/d1/users', async (c) => {
   const db = createDB(c.env)
   const dbUsers = await db.select().from(userTable)
 
+  return c.json({ dbUsers })
+}).get('/do/users', async (c) => {
   const durableObject = c.env.DO_D1_DO.idFromName('do-d1-drizzle');
   const durableObjectStub = c.env.DO_D1_DO.get(durableObject);
   const doUsers = await durableObjectStub.getUsers()
 
-  return c.json({ dbUsers, doUsers })
+  return c.json({ doUsers })
 })
 
 export { SampleObject }
